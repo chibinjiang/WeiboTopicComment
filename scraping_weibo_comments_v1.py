@@ -95,7 +95,7 @@ def generate_info(cache):
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
-                    cache.rpush(COMMENT_JOBS_CACHE, xhr_url)
+                    cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
                 spider = WeiboCommentSpider(xhr, CURRENT_ACCOUNT, WEIBO_ACCOUNT_PASSWD, timeout=20)
@@ -110,7 +110,6 @@ def generate_info(cache):
             break
         except Exception as e:  # no matter what was raised, cannot let process died
             traceback.print_exc()
-            time.sleep(10)
             cache.incr(WEIBO_ERROR_TIME)
             error_count += 1
             print 'Faild to parse job: ', job
