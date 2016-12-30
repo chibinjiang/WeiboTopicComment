@@ -3,7 +3,7 @@
 
 import traceback
 from datetime import datetime as dt
-from template.weibo_writer import DBAccesor, database_error_hunter
+from zc_spider.weibo_writer import DBAccesor, database_error_hunter
 
 
 class WeiboCommentWriter(DBAccesor):
@@ -42,10 +42,10 @@ class WeiboCommentWriter(DBAccesor):
                 uri, info.get('usercard', ''), info.get('text', '')
             )):
                 print '$'*10, "1. Insert comment %s SUCCEED." % uri
-            # conn.commit(); cursor.close(); conn.close()
+            conn.commit(); cursor.close(); conn.close()
         except Exception as e:
             traceback.print_exc()
-            # conn.commit(); cursor.close(); conn.close()
+            conn.commit(); cursor.close(); conn.close()
             raise Exception(str(e))
 
     @database_error_hunter
