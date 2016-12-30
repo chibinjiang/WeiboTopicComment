@@ -87,7 +87,7 @@ def generate_info(cache):
             switch_account(cache)
             cache.incr(WEIBO_ACCESS_TIME)
             if "||" not in job:  # init comment url
-                spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
+                spider = WeiboCommentSpider(job, CURRENT_ACCOUNT, WEIBO_ACCOUNT_PASSWD, timeout=20)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, CURRENT_ACCOUNT))
@@ -110,6 +110,7 @@ def generate_info(cache):
             break
         except Exception as e:  # no matter what was raised, cannot let process died
             traceback.print_exc()
+            time.sleep(10)
             cache.incr(WEIBO_ERROR_TIME)
             error_count += 1
             print 'Faild to parse job: ', job
