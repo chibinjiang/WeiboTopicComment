@@ -109,6 +109,7 @@ def generate_info(cache):
             print str(e)
             break
         except Exception as e:  # no matter what was raised, cannot let process died
+            traceback.print_exc()
             cache.incr(WEIBO_ERROR_TIME)
             error_count += 1
             print 'Faild to parse job: ', job
@@ -141,10 +142,7 @@ def add_jobs(target):
     dao = WeiboCommentWriter(USED_DATABASE)
     for job in dao.read_comment_from_db():  # iterate
         todo += 1
-        print job
         target.rpush(COMMENT_JOBS_CACHE, job)
-        # if todo > 1:
-        #     break
     print 'There are totally %d jobs to process' % todo
     return todo
 
