@@ -51,7 +51,7 @@ def init_current_account(cache):
 
 def switch_account(cache):
     global CURRENT_ACCOUNT
-    if cache.get(WEIBO_ERROR_TIME) and int(cache.get(WEIBO_ERROR_TIME)) > 99:  # error count
+    if cache.get(WEIBO_ERROR_TIME) and int(cache.get(WEIBO_ERROR_TIME)) > 9999:  # error count
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), 'Swithching weibo account'
         expired_account = cache.get(WEIBO_CURRENT_ACCOUNT)
         access_times = cache.get(WEIBO_ACCESS_TIME)
@@ -70,8 +70,10 @@ def switch_account(cache):
         cache.set(WEIBO_ACCESS_TIME, 0)
         cache.set(WEIBO_ERROR_TIME, 0)
         CURRENT_ACCOUNT = new_account
-    else:
+    elif cache.get(WEIBO_CURRENT_ACCOUNT):
         CURRENT_ACCOUNT = cache.get(WEIBO_CURRENT_ACCOUNT)
+    else:
+        raise Exception('Unknown Account Error')
 
 
 def generate_info(cache):
