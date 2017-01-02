@@ -90,13 +90,13 @@ def generate_info(cache):
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Generate Comment Process pid is %d" % (cp.pid)
         job = cache.blpop(COMMENT_JOBS_CACHE, 0)[1]
         try:
-            switch_account(cache)
-            cache.incr(WEIBO_ACCESS_TIME)
+            all_account = cache.hkeys(MANUAL_COOKIES)
+            account = random.choice(all_account)
             if "||" not in job:  # init comment url
-                spider = WeiboCommentSpider(job, CURRENT_ACCOUNT, WEIBO_ACCOUNT_PASSWD, timeout=20)
+                spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, CURRENT_ACCOUNT))
+                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
                 # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
@@ -104,10 +104,10 @@ def generate_info(cache):
                     cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
-                spider = WeiboCommentSpider(xhr, CURRENT_ACCOUNT, WEIBO_ACCOUNT_PASSWD, timeout=20)
+                spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, CURRENT_ACCOUNT))
+                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
                 # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 spider.parse_comment_info(uri, cache)
@@ -116,7 +116,6 @@ def generate_info(cache):
             break
         except Exception as e:  # no matter what was raised, cannot let process died
             traceback.print_exc()
-            cache.incr(WEIBO_ERROR_TIME)
             error_count += 1
             print 'Faild to parse job: ', job
             cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
@@ -171,10 +170,8 @@ def run_all_worker():
     cp = mp.current_process()
     print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Run All Works Process pid is %d" % (cp.pid)
     try:
-        job_pool.close()
-        result_pool.close()
-        job_pool.join()
-        result_pool.join()
+        job_pool.close(); result_pool.close()
+        job_pool.join(); result_pool.join()
         print "+"*10, "jobs' length is ", r.llen(COMMENT_JOBS_CACHE) 
         print "+"*10, "results' length is ", r.llen(COMMENT_RESULTS_CACHE)
     except Exception as e:
