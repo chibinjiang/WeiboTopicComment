@@ -49,8 +49,6 @@ class WeiboCommentSpider(WeiboSpider):
             return comment_list
         for comment in all_comments:
             comm_info = {}
-            if u'演的疯子' in str(comment):
-                import ipdb; ipdb.set_trace()
             like_div = comment.find(attrs={'node-type': 'like_status'})
             like_regex = re.search(r'(\d+)', like_div.text) if like_div else None
             comm_info['like_num'] = like_regex.group(1) if like_regex else '0'
@@ -76,8 +74,8 @@ class WeiboCommentSpider(WeiboSpider):
             comm_info['pageno'] = current_page
             comm_info['uri'] = uri
             if len(comm_info) > 5:
-                # for k, v in comm_info.items():
-                #     print k, v
+                for k, v in comm_info.items():
+                    print "Key: ", k,"Value:", v
                 comment_list.append(comm_info)
                 rconn.rpush(COMMENT_RESULTS_CACHE, pickle.dumps(comm_info))
         return comment_list
