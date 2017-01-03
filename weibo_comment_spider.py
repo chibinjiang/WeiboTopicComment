@@ -74,8 +74,8 @@ class WeiboCommentSpider(WeiboSpider):
             comm_info['pageno'] = current_page
             comm_info['uri'] = uri
             if len(comm_info) > 5:
-                for k, v in comm_info.items():
-                    print "Key: ", k,"Value:", v
+                # for k, v in comm_info.items():
+                #     print "Key: ", k,"Value:", v
                 comment_list.append(comm_info)
                 rconn.rpush(COMMENT_RESULTS_CACHE, pickle.dumps(comm_info))
         return comment_list
