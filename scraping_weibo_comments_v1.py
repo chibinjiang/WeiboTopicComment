@@ -34,46 +34,7 @@ elif 'centos' in os.environ.get('HOSTNAME'):
 else:
     raise Exception("Unknown Environment, Check it now...")
 
-test_curl = "curl 'http://weibo.com/1791434577/info' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: _T_WM=091a7f8021abc37974cfbb8fc47e6ba3; ALF=1484106233; SUB=_2A251SmypDeTxGeNG71EX8ybKwj6IHXVWtXThrDV8PUJbkNAKLUb_kW1_1M3WyDkt9alEMQg5hlJuRoq9kg..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HA7SsRPVzLQ_q6ucc2n_c5JpX5oz75NHD95Qf1hB0SoeRSo.EWs4Dqcj6i--ciK.Ni-27i--ciKnRiK.pi--Xi-z4iKyFi--4iK.Ri-z0i--ciK.RiKy8i--fi-z7iK.pi--fi-z4i-zX; TC-Ugrow-G0=968b70b7bcdc28ac97c8130dd353b55e; wvr=6; TC-V5-G0=7975b0b5ccf92b43930889e90d938495; TC-Page-G0=4c4b51307dd4a2e262171871fe64f295' -H 'Connection: keep-alive' --compressed"
-CURRENT_ACCOUNT = ''
-
-
-def init_current_account(cache):
-    print 'Initializing weibo account'
-    global CURRENT_ACCOUNT
-    CURRENT_ACCOUNT = cache.hkeys(MANUAL_COOKIES)[0]
-    print '1', CURRENT_ACCOUNT
-    if not cache.get(WEIBO_CURRENT_ACCOUNT):
-        cache.set(WEIBO_CURRENT_ACCOUNT, CURRENT_ACCOUNT)
-        cache.set(WEIBO_ACCESS_TIME, 0)
-        cache.set(WEIBO_ERROR_TIME, 0)
-    
-
-def switch_account(cache):
-    global CURRENT_ACCOUNT
-    if cache.get(WEIBO_ERROR_TIME) and int(cache.get(WEIBO_ERROR_TIME)) > 9999:  # error count
-        print dt.now().strftime("%Y-%m-%d %H:%M:%S"), 'Swithching weibo account'
-        expired_account = cache.get(WEIBO_CURRENT_ACCOUNT)
-        access_times = cache.get(WEIBO_ACCESS_TIME)
-        error_times = cache.get(WEIBO_ERROR_TIME)
-        print "Account(%s) access %s times but failed %s times" % (expired_account, access_times, error_times)
-        cache.hdel(MANUAL_COOKIES, expired_account)
-        if len(cache.hkeys(MANUAL_COOKIES)) == 0:
-            cache.delete(WEIBO_CURRENT_ACCOUNT)
-            cache.set(WEIBO_ACCESS_TIME, 0)
-            cache.set(WEIBO_ERROR_TIME, 0)
-            raise RedisException('All Weibo Accounts were run out of')
-        else:
-            new_account = cache.hkeys(MANUAL_COOKIES)[0]
-        # init again
-        cache.set(WEIBO_CURRENT_ACCOUNT, new_account)
-        cache.set(WEIBO_ACCESS_TIME, 0)
-        cache.set(WEIBO_ERROR_TIME, 0)
-        CURRENT_ACCOUNT = new_account
-    elif cache.get(WEIBO_CURRENT_ACCOUNT):
-        CURRENT_ACCOUNT = cache.get(WEIBO_CURRENT_ACCOUNT)
-    else:
-        raise Exception('Unknown Account Error')
+test_curl = "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4059411661694679&from=singleWeiBo&__rnd=1483412126332' -H 'Cookie: ALF=1486002807; SUB=_2A251b30nDeTxGeNH41AQ-S3EzT-IHXVWkANvrDV8PUJbkNANLWX6kW1ggDSG5-LMedvrsK1Y1bIpphpIIA..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFN5399i.PqWgYa6LN3vbAU5JpX5oz75NHD95Qf1KnEeK.01hq0Ws4Dqcj_i--ci-z7iKysi--fiK.7i-8hi--fiKy8iKLWi--fi-2ciKnEi--ciKyWiKLF; _T_WM=522e01eb0b69f7bfc444d219ddb399dc; _s_tentry=-; Apache=4496746608072.71.1483410811472; SINAGLOBAL=4496746608072.71.1483410811472; ULV=1483410811503:1:1:1:4496746608072.71.1483410811472:; YF-V5-G0=0baaa8de04b7d4d04b249e7bb109f469; YF-Page-G0=1ac418838b431e81ff2d99457147068c; YF-Ugrow-G0=3a02f95fa8b3c9dc73c74bc9f2ca4fc6' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/1644088831/EoVzg76Rx?type=comment' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed"
 
 
 def generate_info(cache):
@@ -96,8 +57,8 @@ def generate_info(cache):
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                # spider.use_cookie_from_curl(test_curl)
+                # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
@@ -107,8 +68,8 @@ def generate_info(cache):
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                # spider.use_cookie_from_curl(test_curl)
+                # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 spider.parse_comment_info(uri, cache)
         except RedisException as e:
@@ -161,10 +122,10 @@ def run_all_worker():
         return 0
     else:
         print "Redis has %d records in cache" % r.llen(COMMENT_JOBS_CACHE)
-    init_current_account(r)
-    job_pool = mp.Pool(processes=8,
+    # init_current_account(r)
+    job_pool = mp.Pool(processes=4,
         initializer=generate_info, initargs=(r, ))
-    result_pool = mp.Pool(processes=4, 
+    result_pool = mp.Pool(processes=2, 
         initializer=write_data, initargs=(r, ))
 
     cp = mp.current_process()
