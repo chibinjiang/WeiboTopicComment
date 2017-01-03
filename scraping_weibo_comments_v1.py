@@ -61,7 +61,7 @@ def generate_info(cache):
             # account = random.choice(all_account)
             account = "binking"
             if "||" not in job:  # init comment url
-                spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
+                spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
@@ -72,7 +72,7 @@ def generate_info(cache):
                     cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
-                spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20)
+                spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
