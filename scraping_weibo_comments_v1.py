@@ -76,7 +76,7 @@ def generate_info(cache):
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                spider.use_cookie_from_curl(test_curl)
+                spider.use_cookie_from_curl(random.choice(test_curl))
                 status = spider.gen_html_source()
                 spider.parse_comment_info(uri, cache)
         except RedisException as e:
