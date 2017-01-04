@@ -59,7 +59,7 @@ def generate_info(cache):
         try:
             all_account = cache.hkeys(MANUAL_COOKIES)
             account = random.choice(all_account)
-            account = "binking"
+            # account = "binking"
             if "||" not in job:  # init comment url
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
