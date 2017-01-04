@@ -33,6 +33,9 @@ class WeiboCommentSpider(WeiboSpider):
             return comment_list
         # Parse game is on !!!
         data = json.loads(self.page)
+        if data['data']['count'] == 0:
+            print 'No any comment'
+            return comment_list
         totalpage = int(data['data']['page']['totalpage'])
         print '%s has %d comment pages.' % (uri, totalpage)
         if "page" not in self.url and totalpage > 1:

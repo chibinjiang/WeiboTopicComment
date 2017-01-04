@@ -56,7 +56,7 @@ class WeiboCommentWriter(DBAccesor):
             AND createdate  > date_sub(NOW(), INTERVAL '2' DAY)
             AND  not exists(
             SELECT * FROM weibocomment WHERE weibo_url = w.weibo_url)
-            AND cast(weibo_thumb_up_num AS signed) > 50
+            AND cast(weibo_thumb_up_num AS signed) > 20
             ORDER BY w.createdate DESC
         """
         conn = self.connect_database()
