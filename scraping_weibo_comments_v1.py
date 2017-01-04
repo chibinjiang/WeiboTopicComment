@@ -57,15 +57,15 @@ def generate_info(cache):
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Generate Comment Process pid is %d" % (cp.pid)
         job = cache.blpop(COMMENT_JOBS_CACHE, 0)[1]
         try:
-            # all_account = cache.hkeys(MANUAL_COOKIES)
-            # account = random.choice(all_account)
+            all_account = cache.hkeys(MANUAL_COOKIES)
+            account = random.choice(all_account)
             account = "binking"
             if "||" not in job:  # init comment url
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                spider.use_cookie_from_curl(random.choice(test_curl))
+                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                # spider.use_cookie_from_curl(random.choice(test_curl))
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
@@ -75,8 +75,8 @@ def generate_info(cache):
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                spider.use_cookie_from_curl(random.choice(test_curl))
+                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                # spider.use_cookie_from_curl(random.choice(test_curl))
                 status = spider.gen_html_source()
                 spider.parse_comment_info(uri, cache)
         except RedisException as e:
