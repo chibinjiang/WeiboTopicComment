@@ -29,10 +29,13 @@ class WeiboCommentSpider(WeiboSpider):
     def parse_comment_info(self, uri, rconn):
         comment_list = []; current_page = 1
         # print '4' * 20, 'Parsing Bozhu info'
-        if len(self.page) < 20000:
-            return comment_list
+        # if len(self.page) < 20000:
+        #     return comment_list
         # Parse game is on !!!
         data = json.loads(self.page)
+        if data['code'] != '100000':
+            print "Code: %s --> message: %s" % (data['code'], data['msg'])
+            return comment_list
         if data['data']['count'] == 0:
             print 'No any comment'
             return comment_list
@@ -45,7 +48,6 @@ class WeiboCommentSpider(WeiboSpider):
         else:
             page_regex = re.search(r'page=(\d+)', self.url)
             current_page = page_regex.group(1) if page_regex else 1
-        # import ipdb; ipdb.set_trace()
         parser = bs(data['data']['html'], 'html.parser')
         all_comments = parser.find_all('div', attrs={'class': 'list_li S_line1 clearfix'})
         if not all_comments:
@@ -77,8 +79,6 @@ class WeiboCommentSpider(WeiboSpider):
             comm_info['pageno'] = current_page
             comm_info['uri'] = uri
             if len(comm_info) > 5:
-                # for k, v in comm_info.items():
-                #     print "Key: ", k,"Value:", v
                 comment_list.append(comm_info)
                 rconn.rpush(COMMENT_RESULTS_CACHE, pickle.dumps(comm_info))
         return comment_list
