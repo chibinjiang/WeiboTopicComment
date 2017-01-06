@@ -99,11 +99,13 @@ def write_data(cache):
             break
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Write Comment Process pid is %d" % (cp.pid)
         res = cache.blpop(COMMENT_RESULTS_CACHE, 0)[1]
+        info = pickle.loads(res)
         try:
-            dao.insert_comment_into_db(pickle.loads(res))
+            if len(info.get('text', '')) > 0:
+                dao.insert_comment_into_db(info)
         except Exception as e:  # won't let you died
             error_count += 1
-            print 'Failed to write result: ', pickle.loads(res)
+            print 'Failed to write result: ', info
             cache.rpush(COMMENT_RESULTS_CACHE, res)
 
 

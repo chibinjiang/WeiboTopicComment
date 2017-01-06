@@ -73,8 +73,12 @@ class WeiboCommentSpider(WeiboSpider):
             text_div = comment.find('div', attrs={'class': 'WB_text'})
             # comm_info['text'] = text_div.comments[-1][1:] if text_div else ''
             text = text_div.text
-            if text and text.find('：') > 0:
+            if text and text.find('：') > 0:  # content is most important
                 comm_info['text'] = re.sub(r'.{0,2}@.+[ :]|#.+#', '', text[text.find('：')+1:])
+                if len(comm_info['text']) == 0:
+                    continue
+            else:
+                continue
             comm_info['xhr_path'] = self.url
             comm_info['date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S")
             comm_info['pageno'] = current_page
