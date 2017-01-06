@@ -6,6 +6,7 @@ import json
 import time
 import pickle
 import requests
+import traceback
 from datetime import datetime as dt
 from bs4 import BeautifulSoup as bs
 from zc_spider.weibo_utils import catch_parse_error,extract_chinese_info
@@ -32,7 +33,7 @@ class WeiboCommentSpider(WeiboSpider):
         # if len(self.page) < 20000:
         #     return comment_list
         # Parse game is on !!!
-        data = json.loads(self.page)
+        data = json.loads(self.page)   
         if data['code'] != '100000':
             print "Code: %s --> message: %s" % (data['code'], data['msg'])
             return comment_list

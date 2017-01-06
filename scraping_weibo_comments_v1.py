@@ -34,12 +34,7 @@ elif 'centos' in os.environ.get('HOSTNAME'):
 else:
     raise Exception("Unknown Environment, Check it now...")
 
-test_curl = [
-    "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=3927488604510131&from=singleWeiBo&__rnd=1483498984091' -H 'Cookie: ALF=1486090296; SUB=_2A251aBNoDeTxGeNH41AT8SvIzT6IHXVWkr0grDV8PUJbkNANLXD6kW0rHUQEwLzlyIQRIisxoZW7GPObXA..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWWRKKwdRYEYxXFF2rPYLE75JpX5oz75NHD95Qf1KnEeo2fShqEWs4Dqcj_i--ci-82i-iFi--4iKn0i-i2i--fi-iWiK.fi--Ni-iFiK.0i--ciK.RiK.0; _T_WM=cc1b182fe4bfce02fbbff0aa11c40172; YF-V5-G0=a53c7b4a43414d07adb73f0238a7972e; YF-Page-G0=4c69ce1a525bc6d50f53626826cd2894; YF-Ugrow-G0=ad83bc19c1269e709f753b172bddb094; _s_tentry=-; Apache=7752738435652.491.1483498967984; SINAGLOBAL=7752738435652.491.1483498967984; ULV=1483498968035:1:1:1:7752738435652.491.1483498967984:' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/2488235244/Dbx6siVi3?type=comment' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed",
-    "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=3927488604510131&from=singleWeiBo&__rnd=1483499531544' -H 'Cookie: ALF=1486091514; SUB=_2A251aBerDeTxGeNH41cU9y7OzTmIHXVWkrnjrDV8PUJbkNANLRCmkW0r9fUoT0PP8VXc5K59chs_T85scg..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFg8oQ_4kEeo5yf.Qyser_55JpX5oz75NHD95Qf1KnfSKM7eoqfWs4Dqcj_i--ci-zciKnRi--ci-2ciKnci--fiK.fi-2ci--RiKLhiK.0i--fiK.0iK.p; _T_WM=dd277b74e789d17d21c363da940ba329; YF-Page-G0=e3ff5d70990110a1418af5c145dfe402; YF-Ugrow-G0=ad83bc19c1269e709f753b172bddb094; _s_tentry=-; Apache=6979858962659.345.1483499531210; SINAGLOBAL=6979858962659.345.1483499531210; ULV=1483499531299:1:1:1:6979858962659.345.1483499531210:' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/2488235244/Dbx6siVi3' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed",
-    "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=3927488604510131&from=singleWeiBo&__rnd=1483499680785' -H 'Cookie: ALF=1486091666; SUB=_2A251aBjDDeTxGeNH41AT8C_LzD-IHXVWkriLrDV8PUJbkNANLVGkkW1kOhzhY5DrTmJ2iXKAosd61WUiwg..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhjdOISPHO5vkEqf9d-HpF25JpX5oz75NHD95Qf1KnEeo5pS0M0Ws4Dqcj_i--fiKyhi-iFi--ci-zfiKy8i--fi-zRiKn0i--NiKn4iKyhi--Xi-zRi-i2; _T_WM=102dfeddca40c3db8ad77409dd13bc12; YF-Page-G0=280e58c5ca896750f16dcc47ceb234ed; YF-Ugrow-G0=ad83bc19c1269e709f753b172bddb094' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/2488235244/Dbx6siVi3' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed",
-    "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=3927488604510131&from=singleWeiBo&__rnd=1483499772595' -H 'Cookie: ALF=1486091764; SUB=_2A251aBikDeTxGeNH41cU-C7KyT-IHXVWkrjsrDV8PUJbkNANLUr5kW1854Q93WFhoIB4w_cOfi3lqu4yxw..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhdlIvWVGaaClSqp2YKeY5M5JpX5oz75NHD95Qf1KnfSKn7Soz0Ws4Dqcj_i--fiKn0i-zfi--ci-82iKnNi--fiK.ciKnEi--Xi-iFi-i2i--NiK.0iKLh; _T_WM=46b6a8fd1a5b7545822b9755f7302b90; YF-Page-G0=ed0857c4c190a2e149fc966e43aaf725; YF-Ugrow-G0=56862bac2f6bf97368b95873bc687eef' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/2488235244/Dbx6siVi3?type=comment' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed"
-]
+test_curl = "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4059539257612395&__rnd=1483676899106' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: SINAGLOBAL=7912212257618.43.1478585959985; wb_publish_fist100_5843638692=1; wvr=6; _T_WM=03e781554acf9dd24f1be01327a60a32; YF-Page-G0=d0adfff33b42523753dc3806dc660aa7; _s_tentry=-; Apache=9751347814485.37.1483668519299; ULV=1483668519511:25:3:3:9751347814485.37.1483668519299:1483508239455; YF-Ugrow-G0=8751d9166f7676afdce9885c6d31cd61; WBtopGlobal_register_version=c689c52160d0ea3b; SCF=Ap11mp4UEZs9ZcoafG0iD1wVDGjdyuPuLY8BpwtpvSEEvUHF2uToKM-7WlBpLkmhZ8RBzBoq6rkGPr6RQnLxkPM.; SUB=_2A251aoy0DeTxGeNG71EX8ybKwj6IHXVWAfl8rDV8PUNbmtANLXbhkW-Ca4XWBrg6Mlj9Y8JHL6ezeBXp4A..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HA7SsRPVzLQ_q6ucc2n_c5JpX5K2hUgL.Fo-RShece0nc1Kz2dJLoI0YLxKqL1KMLBK5LxKqL1hnL1K2LxKBLBo.L12zLxK.L1KnLBoeLxKqL1KnL12-LxK-LBo5L1K2LxK-LBo.LBoBt; SUHB=0sqRRqxSCPeB1B; ALF=1484273507; SSOLoginState=1483668708; un=jiangzhibinking@outlook.com; YF-V5-G0=a9b587b1791ab233f24db4e09dad383c; UOR=,,zhiji.heptax.com' -H 'Connection: keep-alive' --compressed"
 
 
 def generate_info(cache):
@@ -58,13 +53,12 @@ def generate_info(cache):
         try:
             all_account = cache.hkeys(MANUAL_COOKIES)
             account = random.choice(all_account)
-            # account = "binking"
             if "||" not in job:  # init comment url
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                # spider.use_cookie_from_curl(random.choice(test_curl))
+                # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
@@ -75,9 +69,13 @@ def generate_info(cache):
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
-                # spider.use_cookie_from_curl(random.choice(test_curl))
+                # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source(raw=True)
                 spider.parse_comment_info(uri, cache)
+        except ValueError as e:
+            print e  # print e.message
+            error_count += 1
+            cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
         except RedisException as e:
             print str(e)
             break

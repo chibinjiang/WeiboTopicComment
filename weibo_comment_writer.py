@@ -1,9 +1,12 @@
 #-*- coding: utf-8 -*-
 # ----------- 评论48992 爬取一个微博的所有评论 --------------
-
+import warnings
 import traceback
 from datetime import datetime as dt
 from zc_spider.weibo_writer import DBAccesor, database_error_hunter
+
+
+warnings.filterwarnings("ignore")
 
 
 class WeiboCommentWriter(DBAccesor):
@@ -50,10 +53,16 @@ class WeiboCommentWriter(DBAccesor):
 
     @database_error_hunter
     def read_comment_from_db(self):
+        """
+            SET NAMES utf8mb4;
+            ALTER DATABASE database_name CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+            ALTER TABLE table_name CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            ALTER TABLE table_name CHANGE column_name column_name VARCHAR(140) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+        """
         select_new_user_sql = """
             SELECT DISTINCT weibo_url FROM weibo w 
             WHERE 1=1   -- Weibo 还没有爬过comment 的列表
-            AND createdate  > date_sub(NOW(), INTERVAL '2' DAY)
+            AND createdate  > date_sub(NOW(), INTERVAL '7' DAY)
             AND  not exists(
             SELECT * FROM weibocomment WHERE weibo_url = w.weibo_url)
             AND cast(weibo_thumb_up_num AS signed) > 20
