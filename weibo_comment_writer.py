@@ -48,6 +48,7 @@ class WeiboCommentWriter(DBAccesor):
             conn.commit(); cursor.close(); conn.close()
         except Exception as e:
             traceback.print_exc()
+            conn.rollback()
             conn.commit(); cursor.close(); conn.close()
             raise Exception(str(e))
 
