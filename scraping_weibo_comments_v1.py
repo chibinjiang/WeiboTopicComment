@@ -84,6 +84,7 @@ def generate_info(cache):
             error_count += 1
             print 'Faild to parse job: ', job
             cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
+        time.sleep(2)
         
 
 def write_data(cache):
