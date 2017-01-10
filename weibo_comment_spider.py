@@ -13,6 +13,16 @@ from zc_spider.weibo_utils import catch_parse_error,extract_chinese_info
 from zc_spider.weibo_spider import WeiboSpider
 from zc_spider.weibo_config import COMMENT_JOBS_CACHE, COMMENT_RESULTS_CACHE
 
+# Wrong xhr html
+# repost
+first_repost = "http://weibo.com/aj/v6/mblog/info/big?ajwvr=6&id={mid}&__rnd={timestamp}"
+second_repost = "http://weibo.com/aj/v6/mblog/info/big?ajwvr=6&id={mid}&max_id=4061406120459461&page={page}&__rnd={timestamp}"
+# comment
+first_comment = "http://weibo.com/aj/v6/comment/big?ajwvr=6&id={mid}&from=singleWeiBo&__rnd={timestamp}"
+# http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4061242777214019&root_comment_max_id=211384239644973&page=2&filter=hot&sum_comment_number=269&filter_tips_before=0&from=singleWeiBo&__rnd=1483797592352
+# http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4061242777214019&root_comment_max_id=164929873432246&page=3&filter=hot&sum_comment_number=554&filter_tips_before=0&from=singleWeiBo&__rnd=1483797593155
+
+
 class WeiboCommentSpider(WeiboSpider):
     def __init__(self, start_url, account, password, timeout=10, delay=1, proxy={}):
         WeiboSpider.__init__(self, start_url, account, password, timeout=timeout, delay=delay, proxy=proxy)

@@ -34,14 +34,13 @@ elif 'centos' in os.environ.get('HOSTNAME'):
 else:
     raise Exception("Unknown Environment, Check it now...")
 
-test_curl = "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=3927488604510131&from=singleWeiBo&__rnd=1483499772595' -H 'Cookie: ALF=1486091764; SUB=_2A251aBikDeTxGeNH41cU-C7KyT-IHXVWkrjsrDV8PUJbkNANLUr5kW1854Q93WFhoIB4w_cOfi3lqu4yxw..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhdlIvWVGaaClSqp2YKeY5M5JpX5oz75NHD95Qf1KnfSKn7Soz0Ws4Dqcj_i--fiKn0i-zfi--ci-82iKnNi--fiK.ciKnEi--Xi-iFi-i2i--NiK.0iKLh; _T_WM=46b6a8fd1a5b7545822b9755f7302b90; YF-Page-G0=ed0857c4c190a2e149fc966e43aaf725; YF-Ugrow-G0=56862bac2f6bf97368b95873bc687eef' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: */*' -H 'Referer: http://weibo.com/2488235244/Dbx6siVi3?type=comment' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --compressed"
-
+test_curl = "curl 'http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4059539257612395&__rnd=1483676899106' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: zh-CN,zh;q=0.8' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Cookie: SINAGLOBAL=7912212257618.43.1478585959985; wb_publish_fist100_5843638692=1; wvr=6; _T_WM=03e781554acf9dd24f1be01327a60a32; YF-Page-G0=d0adfff33b42523753dc3806dc660aa7; _s_tentry=-; Apache=9751347814485.37.1483668519299; ULV=1483668519511:25:3:3:9751347814485.37.1483668519299:1483508239455; YF-Ugrow-G0=8751d9166f7676afdce9885c6d31cd61; WBtopGlobal_register_version=c689c52160d0ea3b; SCF=Ap11mp4UEZs9ZcoafG0iD1wVDGjdyuPuLY8BpwtpvSEEvUHF2uToKM-7WlBpLkmhZ8RBzBoq6rkGPr6RQnLxkPM.; SUB=_2A251aoy0DeTxGeNG71EX8ybKwj6IHXVWAfl8rDV8PUNbmtANLXbhkW-Ca4XWBrg6Mlj9Y8JHL6ezeBXp4A..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HA7SsRPVzLQ_q6ucc2n_c5JpX5K2hUgL.Fo-RShece0nc1Kz2dJLoI0YLxKqL1KMLBK5LxKqL1hnL1K2LxKBLBo.L12zLxK.L1KnLBoeLxKqL1KnL12-LxK-LBo5L1K2LxK-LBo.LBoBt; SUHB=0sqRRqxSCPeB1B; ALF=1484273507; SSOLoginState=1483668708; un=jiangzhibinking@outlook.com; YF-V5-G0=a9b587b1791ab233f24db4e09dad383c; UOR=,,zhiji.heptax.com' -H 'Connection: keep-alive' --compressed"
 
 def single_process():
     dao = WeiboCommentWriter(USED_DATABASE)
     cache = redis.StrictRedis(**USED_REDIS)
-    # job = 'http://weibo.com/3263141904/EofwecJFA'
-    job = 'http://weibo.com/2188159454/Eparc7X9l'
+    job = 'http://weibo.com/1672634524/EoYT3vWkz||http://weibo.com/aj/v6/comment/big?ajwvr=6&id=4059539257612395&__rnd=1483676899106'
+    # job = 'http://weibo.com/3215951873/DqCZTAD8J'
     # job = 'http://weibo.com/5245731417/Eofv3eeXI'
     for _ in range(10):
         if "||" not in job:  # init comment url
@@ -61,14 +60,12 @@ def single_process():
             spider = WeiboCommentSpider(xhr, '', WEIBO_ACCOUNT_PASSWD, timeout=20)
             spider.use_abuyun_proxy()
             spider.add_request_header()
-            # spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
             spider.use_cookie_from_curl(test_curl)
-            # spider.use_cookie_from_curl(test_curl[0])
             status = spider.gen_html_source(raw=True)  # get raw response text
             # import ipdb; ipdb.set_trace()
             results = spider.parse_comment_info(uri, cache)
-            # for res in results:
-            #     dao.insert_comment_into_db(res)
+            for res in results:
+                dao.insert_comment_into_db(res)
 
 
 if __name__=="__main__":

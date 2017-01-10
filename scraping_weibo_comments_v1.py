@@ -12,8 +12,7 @@ from requests.exceptions import ConnectionError
 from zc_spider.weibo_utils import RedisException
 from zc_spider.weibo_config import (
     MANUAL_COOKIES,
-    WEIBO_ERROR_TIME, WEIBO_ACCESS_TIME,
-    WEIBO_ACCOUNT_PASSWD, WEIBO_CURRENT_ACCOUNT,
+    WEIBO_ACCOUNT_PASSWD,
     COMMENT_JOBS_CACHE, COMMENT_RESULTS_CACHE,
     QCLOUD_MYSQL, OUTER_MYSQL,
     LOCAL_REDIS, QCLOUD_REDIS
@@ -74,6 +73,7 @@ def generate_info(cache):
                 spider.parse_comment_info(uri, cache)
         except ValueError as e:
             print e  # print e.message
+            time.sleep(1)
             error_count += 1
             cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
         except RedisException as e:
