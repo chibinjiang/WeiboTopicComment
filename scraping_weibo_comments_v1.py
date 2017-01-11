@@ -11,7 +11,7 @@ import multiprocessing as mp
 from requests.exceptions import ConnectionError
 from zc_spider.weibo_utils import RedisException
 from zc_spider.weibo_config import (
-    MANUAL_COOKIES,
+    COMMENT_COOKIES,
     WEIBO_ACCOUNT_PASSWD,
     COMMENT_JOBS_CACHE, COMMENT_RESULTS_CACHE,
     QCLOUD_MYSQL, OUTER_MYSQL,
@@ -50,13 +50,13 @@ def generate_info(cache):
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Generate Comment Process pid is %d" % (cp.pid)
         job = cache.blpop(COMMENT_JOBS_CACHE, 0)[1]
         try:
-            all_account = cache.hkeys(MANUAL_COOKIES)
+            all_account = cache.hkeys(COMMENT_COOKIES)
             account = random.choice(all_account)
             if "||" not in job:  # init comment url
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                spider.use_cookie_from_curl(cache.hget(COMMENT_COOKIES, account))
                 # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
@@ -67,7 +67,7 @@ def generate_info(cache):
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
-                spider.use_cookie_from_curl(cache.hget(MANUAL_COOKIES, account))
+                spider.use_cookie_from_curl(cache.hget(COMMENT_COOKIES, account))
                 # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source(raw=True)
                 spider.parse_comment_info(uri, cache)
