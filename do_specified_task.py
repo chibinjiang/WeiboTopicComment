@@ -123,7 +123,7 @@ def add_jobs(target):
 def run_all_worker():
     r = redis.StrictRedis(**USED_REDIS)
     # r.delete(COMMENT_JOBS_CACHE, COMMENT_RESULTS_CACHE)
-    if not r.llen(COMMENT_JOBS_CACHE):
+    if r.llen(COMMENT_JOBS_CACHE):
         add_jobs(r)
         print "Add jobs DONE, and I quit..."
         return 0
