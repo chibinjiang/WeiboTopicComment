@@ -74,3 +74,33 @@ class WeiboCommentWriter(DBAccesor):
         cursor.execute(select_new_user_sql)
         for res in cursor.fetchall():
             yield res[0]
+
+    @database_error_hunter
+    def read_specified_user(self):
+        select_all_sql = """
+            SELECT DISTINCT weibo_url
+            FROM weibouserblogs
+            WHERE weibo_usercard = %s
+            ORDER BY publish_date DESC LIMIT 500
+        """
+        select_hot_sql = """
+            SELECT DISTINCT weibo_url
+            FROM weibouserblogs
+            WHERE weibo_usercard = %s
+            ORDER BY weibo_thumb_up_num DESC LIMIT 150;
+        """
+        results = set()
+        users = set()
+        conn = self.connect_database()
+        cursor = conn.cursor()
+        cursor.execute(select_user_sql)
+        for res in cursor.fetchall():
+            users.add(res[0])
+        for user in users:
+            cursor.execute(select_all_sql, (user,))
+            for res in cursor.fetchall():
+                results.add(res[0])
+            cursor.execute(select_hot_sql, (user,))
+            for res in cursor.fetchall():
+                results.add(res[0])
+        return results

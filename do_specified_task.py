@@ -113,7 +113,7 @@ def write_data(cache):
 def add_jobs(target):
     todo = 0
     dao = WeiboCommentWriter(USED_DATABASE)
-    for job in dao.read_comment_from_db():  # iterate
+    for job in dao.read_specified_user():  # iterate
         todo += 1
         target.rpush(COMMENT_JOBS_CACHE, job)
     print 'There are totally %d jobs to process' % todo
@@ -152,7 +152,7 @@ def run_all_worker():
 
 
 if __name__=="__main__":
-    print "\n\n" + "%s Began Scraped Weibo Comments" % dt.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
+    print "\n\n" + "%s Began Specified Task" % dt.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
     start = time.time()
     run_all_worker()
-    print "*"*10, "Totally Scraped Weibo Comments Time Consumed : %d seconds" % (time.time() - start), "*"*10
+    print "*"*10, "Totally Specified Task Time Consumed : %d seconds" % (time.time() - start), "*"*10
