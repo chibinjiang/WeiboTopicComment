@@ -77,6 +77,10 @@ class WeiboCommentWriter(DBAccesor):
 
     @database_error_hunter
     def read_specified_user(self):
+        select_user_sql = """
+            SELECT DISTINCT weibo_usercard
+            FROM weibouserblogs
+        """
         select_all_sql = """
             SELECT DISTINCT weibo_url
             FROM weibouserblogs
