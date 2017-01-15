@@ -111,8 +111,10 @@ def write_data(cache):
 def add_jobs(target):
     todo = 0
     dao = WeiboCommentWriter(USED_DATABASE)
-    for job in dao.read_comment_from_db():  # iterate
+    for job in dao.read_specified_user():  # iterate
         todo += 1
+        if todo > 20:
+            break
         target.rpush(COMMENT_JOBS_CACHE, job)
     print 'There are totally %d jobs to process' % todo
     return todo
