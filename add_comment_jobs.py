@@ -30,7 +30,7 @@ def add_jobs(target):
     dao = WeiboCommentWriter(USED_DATABASE)
     for job in dao.read_comment_from_db():  # iterate
         todo += 1
-        if target.llrem(COMMENT_JOBS_CACHE, 0, job):
+        if target.lrem(COMMENT_JOBS_CACHE, 0, job):
             # the job had existed in the queue
             target.lpush(COMMENT_JOBS_CACHE, job)
         else:
