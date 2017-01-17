@@ -59,7 +59,7 @@ def generate_info(cache):
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
-                    cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
+                    cache.rpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)

@@ -32,6 +32,7 @@ class WeiboCommentSpider(WeiboSpider):
         xhr_url = "http://weibo.com/aj/v6/comment/big?ajwvr=6&id=%s&__rnd=%d"
         mid_regex = re.search(r'mid=(\d+)', self.page)
         mid = mid_regex.group(1) if mid_regex else ''
+        print self.url , ' --> ', mid
         if mid:
             return "%s||%s" % (self.url, xhr_url % (mid, int(time.time()*1000)))
         return False
@@ -39,9 +40,6 @@ class WeiboCommentSpider(WeiboSpider):
     @catch_parse_error((AttributeError, IndexError, KeyError,  Exception))
     def parse_comment_info(self, uri, rconn):
         comment_list = []; current_page = 1
-        # print '4' * 20, 'Parsing Bozhu info'
-        # if len(self.page) < 20000:
-        #     return comment_list
         # Parse game is on !!!
         data = json.loads(self.page)   
         if data['code'] != '100000':
