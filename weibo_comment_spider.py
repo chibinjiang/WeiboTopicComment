@@ -7,6 +7,7 @@ import time
 import pickle
 import requests
 import traceback
+from collections import Counter
 from datetime import datetime as dt
 from bs4 import BeautifulSoup as bs
 from zc_spider.weibo_utils import catch_parse_error,extract_chinese_info
@@ -30,10 +31,14 @@ class WeiboCommentSpider(WeiboSpider):
 
     def gen_xhr_url(self):
         xhr_url = "http://weibo.com/aj/v6/comment/big?ajwvr=6&id=%s&__rnd=%d"
-        mid_regex = re.search(r'mid=(\d+)', self.page)
-        mid = mid_regex.group(1) if mid_regex else ''
-        print self.url , ' --> ', mid
-        if mid:
+        mids = re.findall(r'mid=(\d+)', self.page)
+        # candidate:  \<a name="(\d+)"  , first
+        # candidate:  mid="(\d+)"   , first
+        # candidate: mid=(\d+)  , most frequent
+        c = Counter(mids)
+        if len(c) > 1:
+            mid = c.most_common(1)[0][0]
+            print self.url , ' --> ', mid
             return "%s||%s" % (self.url, xhr_url % (mid, int(time.time()*1000)))
         return False
 
