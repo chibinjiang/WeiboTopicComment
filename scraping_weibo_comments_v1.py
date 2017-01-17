@@ -107,28 +107,15 @@ def write_data(cache):
             print 'Failed to write result: ', info
             cache.rpush(COMMENT_RESULTS_CACHE, res)
 
-
-def add_jobs(target):
-    todo = 0
-    dao = WeiboCommentWriter(USED_DATABASE)
-    for job in dao.read_comment_from_db():  # iterate
-        todo += 1
-        # if todo > 20:
-        #     break
-        target.rpush(COMMENT_JOBS_CACHE, job)
-    print 'There are totally %d jobs to process' % todo
-    return todo
-
-
 def run_all_worker():
     r = redis.StrictRedis(**USED_REDIS)
     # r.delete(COMMENT_JOBS_CACHE, COMMENT_RESULTS_CACHE)
-    if not r.llen(COMMENT_JOBS_CACHE):
-        add_jobs(r)
-        print "Add jobs DONE, and I quit..."
-        return 0
-    else:
-        print "Redis has %d records in cache" % r.llen(COMMENT_JOBS_CACHE)
+    # if not r.llen(COMMENT_JOBS_CACHE):
+    #     add_jobs(r)
+    #     print "Add jobs DONE, and I quit..."
+    #     return 0
+    # else:
+    print "Redis has %d records in cache" % r.llen(COMMENT_JOBS_CACHE)
     # init_current_account(r)
     job_pool = mp.Pool(processes=8,
         initializer=generate_info, initargs=(r, ))
