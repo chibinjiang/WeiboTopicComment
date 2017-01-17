@@ -109,9 +109,9 @@ def write_data(cache):
 
 
 def add_jobs(target):
-    todo = 0
+    todo = -1
     dao = WeiboCommentWriter(USED_DATABASE)
-    for job in dao.read_specified_user():  # iterate
+    for job in dao.read_comment_from_db():  # iterate
         todo += 1
         if todo > 20:
             break
