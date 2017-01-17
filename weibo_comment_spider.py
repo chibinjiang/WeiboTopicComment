@@ -46,12 +46,17 @@ class WeiboCommentSpider(WeiboSpider):
     def parse_comment_info(self, uri, rconn):
         comment_list = []; current_page = 1
         # Parse game is on !!!
-        data = json.loads(self.page)   
+        try:
+            data = json.loads(self.page)   
+        except ValueError as e:
+            print str(e), " --> ", self.page
+            return comment_list
         if data['code'] != '100000':
             print "Code: %s --> message: %s" % (data['code'], data['msg'])
+            rconn.rpush(COMMENT_JOBS_CACHE, "%s||%s" % (uri, self.url))
             return comment_list
         if data['data']['count'] == 0:
-            print 'No any comment'
+            print 'No any comment really...'
             return comment_list
         totalpage = int(data['data']['page']['totalpage'])
         print '%s has %d comment pages.' % (uri, totalpage)
