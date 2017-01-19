@@ -39,9 +39,11 @@ def generate_info(cache):
     Producer for urls and topics, Consummer for topics
     """
     error_count = 0
+    loop_count = 0
     cp = mp.current_process()
     while True:
         res = {}
+        loop_count += 1
         if error_count > 999:
             print '>'*10, 'Exceed 1000 times of gen errors', '<'*10
             break
@@ -49,6 +51,9 @@ def generate_info(cache):
         job = cache.blpop(COMMENT_JOBS_CACHE, 0)[1]
         try:
             all_account = cache.hkeys(COMMENT_COOKIES)
+            if len(all_account) == 0:
+                time.sleep(pow(2, loop_count))
+                continue
             account = random.choice(all_account)
             if "||" not in job:  # init comment url
                 spider = WeiboCommentSpider(job, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
@@ -74,9 +79,6 @@ def generate_info(cache):
             time.sleep(1)
             error_count += 1
             cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
-        except RedisException as e:
-            print str(e)
-            break
         except Exception as e:  # no matter what was raised, cannot let process died
             traceback.print_exc()
             error_count += 1
