@@ -65,15 +65,16 @@ def generate_info(cache):
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
                     cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
+                    print "Spider get correct xhr urls"
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 spider.use_cookie_from_curl(cache.hget(COMMENT_COOKIES, account))
-                # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source(raw=True)
                 spider.parse_comment_info(uri, cache)
+                print "Spider get comment infomation"
         except ValueError as e:
             print e  # print e.message
             time.sleep(1)
