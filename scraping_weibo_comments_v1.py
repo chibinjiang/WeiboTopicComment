@@ -64,6 +64,7 @@ def generate_info(cache):
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
+                    print "Spider get correct xhr urls"
                     cache.rpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
@@ -71,9 +72,9 @@ def generate_info(cache):
                 spider.use_abuyun_proxy()
                 spider.add_request_header()
                 spider.use_cookie_from_curl(cache.hget(COMMENT_COOKIES, account))
-                # spider.use_cookie_from_curl(test_curl)
                 status = spider.gen_html_source(raw=True)
                 spider.parse_comment_info(uri, cache)
+                print "Spider get comment infomation"
         except ValueError as e:
             print e  # print e.message
             time.sleep(1)
