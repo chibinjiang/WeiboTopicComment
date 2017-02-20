@@ -26,7 +26,7 @@ if os.environ.get('SPIDER_ENV') == 'test':
     print "*"*10, "Run in Test environment"
     USED_DATABASE = OUTER_MYSQL
     USED_REDIS = LOCAL_REDIS
-elif 'centos' in os.environ.get('HOSTNAME'): 
+elif 'centos' in os.environ.get('HOSTNAME'):
     print "*"*10, "Run in Qcloud environment"
     USED_DATABASE = QCLOUD_MYSQL
     USED_REDIS = QCLOUD_REDIS
@@ -64,7 +64,7 @@ def generate_info(cache):
                 status = spider.gen_html_source()
                 xhr_url = spider.gen_xhr_url()  # xhr_url contains ||
                 if xhr_url:
-                    cache.rpush(COMMENT_JOBS_CACHE, xhr_url)
+                    cache.lpush(COMMENT_JOBS_CACHE, xhr_url)
             else:  # http://num/alphabet||http://js/v6
                 uri, xhr = job.split('||')
                 spider = WeiboCommentSpider(xhr, account, WEIBO_ACCOUNT_PASSWD, timeout=20, delay=3)
@@ -78,14 +78,14 @@ def generate_info(cache):
             print e  # print e.message
             time.sleep(1)
             error_count += 1
-            cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
+            cache.lpush(COMMENT_JOBS_CACHE, job) # put job back
         except Exception as e:  # no matter what was raised, cannot let process died
             traceback.print_exc()
             error_count += 1
             print 'Faild to parse job: ', job
-            cache.rpush(COMMENT_JOBS_CACHE, job) # put job back
+            cache.lpush(COMMENT_JOBS_CACHE, job) # put job back
         time.sleep(2)
-        
+
 
 def write_data(cache):
     """
@@ -121,7 +121,7 @@ def run_all_worker():
     # init_current_account(r)
     job_pool = mp.Pool(processes=8,
         initializer=generate_info, initargs=(r, ))
-    result_pool = mp.Pool(processes=2, 
+    result_pool = mp.Pool(processes=2,
         initializer=write_data, initargs=(r, ))
 
     cp = mp.current_process()
@@ -129,14 +129,14 @@ def run_all_worker():
     try:
         job_pool.close(); result_pool.close()
         job_pool.join(); result_pool.join()
-        print "+"*10, "jobs' length is ", r.llen(COMMENT_JOBS_CACHE) 
+        print "+"*10, "jobs' length is ", r.llen(COMMENT_JOBS_CACHE)
         print "+"*10, "results' length is ", r.llen(COMMENT_RESULTS_CACHE)
     except Exception as e:
         traceback.print_exc()
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Exception raise in run all Work"
     except KeyboardInterrupt:
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Interrupted by you and quit in force, but save the results"
-        print "+"*10, "jobs' length is ", r.llen(COMMENT_JOBS_CACHE) 
+        print "+"*10, "jobs' length is ", r.llen(COMMENT_JOBS_CACHE)
         print "+"*10, "results' length is ", r.llen(COMMENT_RESULTS_CACHE)
 
 
