@@ -47,7 +47,7 @@ class WeiboCommentSpider(WeiboSpider):
         comment_list = []; current_page = 1
         # Parse game is on !!!
         try:
-            data = json.loads(self.page)   
+            data = json.loads(self.page)
         except ValueError as e:
             print str(e), " --> ", self.page
             return comment_list
@@ -63,7 +63,7 @@ class WeiboCommentSpider(WeiboSpider):
         if "page" not in self.url and totalpage > 1:
             for i in range(2, totalpage):
                 temp_url = self.url + "&page=%d" % i
-                rconn.rpush(COMMENT_JOBS_CACHE, "%s||%s" % (uri,temp_url))
+                rconn.lpush(COMMENT_JOBS_CACHE, "%s||%s" % (uri,temp_url))
         else:
             page_regex = re.search(r'page=(\d+)', self.url)
             current_page = page_regex.group(1) if page_regex else 1
