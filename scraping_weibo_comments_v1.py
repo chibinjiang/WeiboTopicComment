@@ -44,8 +44,8 @@ def generate_info(cache):
     while True:
         res = {}
         loop_count += 1
-        if error_count > 999:
-            print '>'*10, 'Exceed 1000 times of gen errors', '<'*10
+        if error_count > 9999:
+            print '>'*10, 'Exceed 10000 times of gen errors', '<'*10
             break
         print dt.now().strftime("%Y-%m-%d %H:%M:%S"), "Generate Comment Process pid is %d" % (cp.pid)
         job = cache.blpop(COMMENT_JOBS_CACHE, 0)[1]
